@@ -46,8 +46,8 @@ class ApiController extends Controller
         $save_text = explode('を登録',$text)[0];
         \Log::debug('message_を登録:' . $save_text);
         //$remind_week = timetable::firstOrNew(['user_id' => $user_id]);
-        $arr['user_id'] = $user_id;
-        \Log::debug($arr);
+        //$arr['user_id'] = $user_id;
+        $arr = Array();
 
         if(strpos($save_text, '月曜') !== false){
             \Log::debug('message: '.explode('月曜',$text)[1]);
@@ -71,9 +71,12 @@ class ApiController extends Controller
                 $arr
             );
         }
+        //データが有ればupdate、なければ作成
         timetable::updateOrCreate(
+            ['user_id' => $user_id],
             $arr
         );
+
         $test = timetable::distinct()->get();
         \Log::debug($test);
         $bot->replyText($reply_token, "リマインド登録したよ");
